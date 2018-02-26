@@ -2,14 +2,14 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    run: lumenconcept-catalog-svc
-  name: lumenconcept-catalog-svc
+    run: lumenconcept-quotation-svc
+  name: lumenconcept-quotation-svc
   namespace: default
 spec:
   replicas: 2
   selector:
     matchLabels:
-      run: lumenconcept-catalog-svc
+      run: lumenconcept-quotation-svc
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -18,14 +18,14 @@ spec:
   template:
     metadata:
       labels:
-        run: lumenconcept-catalog-svc
+        run: lumenconcept-quotation-svc
     spec:
       containers:
-      - name: lumenconcept-catalog-svc
-        image: docker.io/farruza/lumenconcept-catalog
+      - name: lumenconcept-quotation-svc
+        image: docker.io/farruza/lumenconcept-quotation
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 80
+        - containerPort: 8082
       dnsPolicy: ClusterFirst
       restartPolicy: Always
 ---
@@ -33,16 +33,15 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    run: lumenconcept-catalog-svc
-  name: lumenconcept-catalog-svc
+    run: lumenconcept-quotation-svc
+  name: lumenconcept-quotation-svc
   namespace: default
 spec:
   ports:
-  - port: 8080
+  - port: 8082
     protocol: TCP
-    targetPort: 80
-    nodePort: 30000
+    targetPort: 8082
   selector:
-    run: lumenconcept-catalog-svc
+    run: lumenconcept-quotation-svc
   sessionAffinity: None
   type: LoadBalancer
